@@ -1,6 +1,6 @@
 Package: RcmdrPlugin.Export
-Version: 0.2-0
-Date: 2008-04-08
+Version: 0.2-1
+Date: 2008-10-07
 Title: Graphically export objects to LaTeX or HTML
 Author: Liviu Andronic
 Maintainer: Liviu Andronic <landronimirc@gmail.com>
@@ -12,5 +12,5 @@ Description: This package provides facilities to graphically export
   ASCII text and (2) provide R novices with an easy to use, easy to
   access reference on exporting R objects to formats suited for
   printed output.
-License: GPL-3
-Packaged: Tue Apr  8 23:52:00 2008; liviu
+License: GPL version 2 or newer
+Packaged: Thu Oct  9 09:03:10 2008; liviu

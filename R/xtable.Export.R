@@ -1,7 +1,7 @@
-# This file is part of the RcmdrPlugin.Export package. 
-# The current code is based on code taken from Rcmdr. 
+# This file is part of the RcmdrPlugin.Export package.
+# The current code is based on code taken from Rcmdr.
 # file created: 02 Feb 2008
-# last modified: 24 Mar 2008
+# last modified: 07 Oct 2008
 
 xtableExport <- function(){
     justDoIt(paste("tmpObject <- popOutput()"))
@@ -9,17 +9,17 @@ xtableExport <- function(){
     objectClass <- objectClass[[1]]
     if (is.null(objectClass) == "TRUE" | objectClass == "logical"){
         justDoIt(paste("remove(", "tmpObject", ")", sep=""))
-        Message(message=paste("xtable() cannot export objects of class '", objectClass, 
+        Message(message=paste("xtable() cannot export objects of class '", objectClass,
           "'", sep=""), type="note")
         Message(message=paste("the stack is probably empty", sep=""), type="warning")
         return()
         }
-    else if (objectClass == "function" | objectClass == "help_files_with_topic" | 
-      objectClass == "packageIQR" | objectClass == "trellis" | objectClass == "xtable" | 
-      objectClass == "latex" | objectClass == "htest" | objectClass == "stem.leaf" | 
+    else if (objectClass == "function" | objectClass == "help_files_with_topic" |
+      objectClass == "packageIQR" | objectClass == "trellis" | objectClass == "xtable" |
+      objectClass == "latex" | objectClass == "htest" | objectClass == "stem.leaf" |
       objectClass == "multinom"){
         justDoIt(paste("remove(", "tmpObject", ")", sep=""))
-        Message(message=paste("xtable() cannot export objetcts of class '", objectClass, 
+        Message(message=paste("xtable() cannot export objetcts of class '", objectClass,
           "'", sep=""), type="note")
         return(xtableExport())
         }
@@ -28,8 +28,8 @@ xtableExport <- function(){
         }
     dataFrame <- tkframe(top)
     xBox <- variableListBox(dataFrame, paste(objectClass), title=gettextRcmdr("Object class"))
-    radioButtons(window=dataFrame, name="type", buttons=c("latex", "html"), 
-      values=c("LaTeX", "HTML"), labels=gettextRcmdr(c("LaTeX", "HTML")), 
+    radioButtons(window=dataFrame, name="type", buttons=c("latex", "html"),
+      values=c("LaTeX", "HTML"), labels=gettextRcmdr(c("LaTeX", "HTML")),
       title=gettextRcmdr("Export format"))
     optionsFrame <- tkframe(top)
     captionInput <- tclVar("")
@@ -47,7 +47,11 @@ xtableExport <- function(){
     sizeField <- tkentry(additionalFrame, width="15", textvariable=sizeInput)
     naInput <- tclVar("")
     naField <- tkentry(additionalFrame, width="15", textvariable=naInput)
-    require("xtable")
+    fileInput <- tclVar("")
+    fileField <- tkentry(additionalFrame, width="15", textvariable=fileInput)
+    appendVariable <- tclVar("1")
+    appendCheckBox <- tkcheckbutton(additionalFrame, variable=appendVariable)
+	require("xtable")
     onOK <- function(){
         type <- tclvalue(typeVariable)
         caption <- paste(tclvalue(captionInput))
@@ -58,6 +62,8 @@ xtableExport <- function(){
         display <- paste(tclvalue(displayInput))
         size <- paste(tclvalue(sizeInput))
         na <- paste(tclvalue(naInput))
+        file <- paste(tclvalue(fileInput))
+        append <- paste(tclvalue(appendVariable))
         closeDialog()
         if (caption != ""){
             caption <- paste(", caption=", '"', paste(tclvalue(captionInput)), '"', sep="")
@@ -80,6 +86,23 @@ xtableExport <- function(){
         if (na != ""){
             na <- paste(", NA.string=", '"', paste(tclvalue(naInput)), '"', sep="")
             }
+        if (file != ""){
+            if (type == "LaTeX"){
+                file <- paste(", file=", '"', paste(tclvalue(fileInput)), '.tex"', sep="")
+                }
+            else if (type == "HTML"){
+                file <- paste(", file=", '"', paste(tclvalue(fileInput)), '.html"', sep="")
+                }
+			if (append == "1"){
+           		append <- paste(", append=TRUE", sep="")
+           		}
+			else if (append == "0"){
+           		append <- paste("", sep="")
+           		}
+           }
+		else if (file == ""){
+           append <- paste("", sep="")
+           }
         commandRepeat <- 1
         objectName <- paste(".", objectClass, sep="")
         if (objectClass == "numSummary"){
@@ -111,13 +134,13 @@ xtableExport <- function(){
             objectCommandName2 <- paste("as.table(", objectName, "$loadings)", sep="")
             objectCommandName <- c(objectCommandName1, objectCommandName2)
             commandRepeat <- 2
-            Message(message=paste("xtable() cannot export all output of objects of class '", 
+            Message(message=paste("xtable() cannot export all output of objects of class '",
               objectClass, "'", sep=""), type="note")
             }
         else if (objectClass == "outlier.test"){
             objectCommandName <- paste("as.data.frame(", objectName, "$test)", sep="")
             }
-        else if (objectClass == "array" | objectClass == "integer" | 
+        else if (objectClass == "array" | objectClass == "integer" |
           objectClass == "character" | objectClass == "numeric"){
             objectCommandName <- paste("as.data.frame(", objectName, ")", sep="")
             }
@@ -133,17 +156,18 @@ xtableExport <- function(){
             commandRepeat <- dim(tmpObject)
             objectCommandName <- NULL
             for (i in 1:commandRepeat){
-                objectCommandName[i] <- paste("as.table(", objectName, 
+                objectCommandName[i] <- paste("as.table(", objectName,
                   "$", '"', i, '"', ")", sep="")
                 }
             }
         else {
-            objectName <- paste(".object", sep="")            objectCommandName <- paste(objectName)
+            objectName <- paste(".object", sep="")
+            objectCommandName <- paste(objectName)
             }
         justDoIt(paste(objectName, " <- tmpObject", sep=""))
         logger(paste(objectName, " <- popOutput()", sep=""))
         if (type == "LaTeX"){
-            if (size != "" | na != ""){
+            if (size != "" | na != "" | file!=""){
                 usePrint <- paste("print(", sep="")
                 printType <- paste(", type=", '"', "latex", '"', ")", sep="")
                 }
@@ -157,8 +181,10 @@ xtableExport <- function(){
             printType <- paste(", type=", '"', "html", '"', ")", sep="")
             }
         for (i in 1:commandRepeat){
-            doItAndPrint(paste(usePrint, "xtable(", objectCommandName[i], caption, label, 
-              align, digits, display, ")", size, na, printType, sep=""))
+#            doItAndPrint(paste(usePrint, "xtable(", objectCommandName[i], caption, label,
+#              align, digits, display, ")", size, na, file, printType, sep=""))
+            doItAndPrint(paste(usePrint, "xtable(", objectCommandName[i], caption, label,
+              align, digits, display, ")", size, na, file, append, printType, sep=""))
             }
         justDoIt(paste("remove(tmpObject)", sep=""))
         logger(paste("remove(", objectName, ")", sep=""))
@@ -168,10 +194,10 @@ xtableExport <- function(){
     OKCancelHelp(helpSubject="xtable")
     tkgrid(getFrame(xBox), sticky="nw")
     tkgrid(typeFrame, sticky="sw")
-    tkgrid(tklabel(optionsFrame, text=gettextRcmdr("Arguments"), fg="blue"), 
-      tklabel(optionsFrame, text=gettextRcmdr("(optional)"), fg="blue"), sticky="w")   
-    tkgrid(tklabel(additionalFrame, text=gettextRcmdr("Printing"), fg="blue"), 
-      tklabel(additionalFrame, text=gettextRcmdr("options"), fg="blue"), sticky="w") 
+    tkgrid(tklabel(optionsFrame, text=gettextRcmdr("Arguments"), fg="blue"),
+      tklabel(optionsFrame, text=gettextRcmdr("(optional)"), fg="blue"), sticky="w")
+    tkgrid(tklabel(additionalFrame, text=gettextRcmdr("Printing"), fg="blue"),
+      tklabel(additionalFrame, text=gettextRcmdr("options"), fg="blue"), sticky="w")
     tkgrid(tklabel(optionsFrame, text=gettextRcmdr("Caption:")), captionField, sticky="w")
     tkgrid(tklabel(optionsFrame, text=gettextRcmdr("Label:")), labelField, sticky="w")
     tkgrid(tklabel(optionsFrame, text=gettextRcmdr("Align:")), alignField, sticky="w")
@@ -179,7 +205,9 @@ xtableExport <- function(){
     tkgrid(tklabel(optionsFrame, text=gettextRcmdr("Display:")), displayField, sticky="w")
     tkgrid(tklabel(additionalFrame, text=gettextRcmdr("Size:")), sizeField, sticky="w")
     tkgrid(tklabel(additionalFrame, text=gettextRcmdr("NA string:")), naField, sticky="w")
-    tkgrid(dataFrame, tklabel(top, text=" "), optionsFrame, tklabel(top, text=" "), 
+    tkgrid(tklabel(additionalFrame, text=gettextRcmdr("File:")), fileField, sticky="w")
+    tkgrid(tklabel(additionalFrame, text=gettextRcmdr("Append")), appendCheckBox, sticky="w")
+    tkgrid(dataFrame, tklabel(top, text=" "), optionsFrame, tklabel(top, text=" "),
       additionalFrame, sticky="nw")
     tkgrid(buttonsFrame, columnspan=3, sticky="w")
     dialogSuffix(rows=3, columns=3)

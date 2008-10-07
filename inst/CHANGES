@@ -1,2 +1,7 @@
-Version 0.2-0
-    - Initial public release
+Version 0.2-0: Initial public release
+
+Version 0.2-1
+
+    * Release the code under the same licence that Rcmdr code is released
+    * Add support for the 'file' and 'append' options of print.xtable() (suggested by Ulrich Halekoh)
+    * Updated the documentation, which now includes information on compatibility with regular word-processing programmes. 
