@@ -46,10 +46,10 @@ License: \tab GPL version 2 or newer\cr
   On both Windows and Linux (currently I am not aware of MacOS), \code{LyX}
   can be configured to process Sweave files. While configuration on
   Windows might prove cumbersome, on Linux it may well be straight-forward.
-  Several approaches are possible:  \newline{}
-  - Gregor Gorjanc's \url{http://gregor.gorjanc.googlepages.com/lyx-sweave} \newline{}
-  - Paul E. Johnson's \url{http://wiki.lyx.org/LyX/LyxWithRThroughSweave} and \newline{}
-  \url{http://www.nabble.com/Converter-failure-with-Sweave-tt16180204.html} \newline{}
+  Several approaches are possible:  \cr
+  - Gregor Gorjanc's \url{http://gregor.gorjanc.googlepages.com/lyx-sweave} \cr
+  - Paul E. Johnson's \url{http://wiki.lyx.org/LyX/LyxWithRThroughSweave} and \cr
+  \url{http://www.nabble.com/Converter-failure-with-Sweave-tt16180204.html} \cr
   - \url{http://www.nabble.com/Moving-graphics-from-R-into-LyX---best-format--tt14791163.html}
 
   The first one is a "complete approach", the second will be particularly
