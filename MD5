@@ -1,0 +1,14 @@
+507f729f5f17d357e6aa132e55696c6d *DESCRIPTION
+4ba4f712829fac6f3f86c2d6c7db7301 *NAMESPACE
+87b24769ca3778971552f8dafaabb33c *R/autoloadRcmdr.R
+af3a65807cae3eff8d9b40eee43a1d53 *R/formatdfExport.R
+b379f2b17648f22349690c8acad896dd *R/latexExport.R
+a425b366406c17e94d47f63d1620890a *R/xtableExport.R
+9db8c66c2129be2ae56577a09c817818 *inst/ChangeLog
+e8bb51b5be7ca0ba94f9aa48f4a9653c *inst/LIMITATIONS
+2daccbd5e2945f2861472f927743077f *inst/etc/menus.txt
+453b9990fc182f53d2b5e79177d40854 *man/RcmdrPlugin.Export-package.Rd
+5a771ba887dd670b01eedb0ac2145a29 *man/formatdfExport.Rd
+896c912fbc47f952b95d78d8d4ac86eb *man/latexExport.Rd
+f342aba94f57f24cead8e7b472e71acb *man/utilities.Rd
+d68901e12e24d7e683506e9302abce43 *man/xtableExport.Rd

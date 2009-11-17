@@ -1,18 +1,14 @@
 # R Commander Export Plugin Menu Definitions
 
 # based on  RcmdrPlugin.TeachingDemos 1.0-0 package last modified: 16 May 2007 by J. Fox
-# last modified: 02 Nov 2007 by L. Andronic
+# last modified: 07 Oct 2009 by L. Andronic
 
 # When the plug-in is loaded, these menus are merged with the standard Rcmdr menus
 #   type    menu/item      operation/parent  label                              command/menu                activation    install?
 
-    menu    exportMenu        topMenu         ""                                             ""                          ""          ""
-    item    exportMenu        command         "Export objects using xtable..."               xtableExport            ""          "packageAvailable('xtable')"
-    item    topMenu           cascade         "Export"                                       exportMenu                    ""          ""
-
-#    menu    exportObjects      dataMenu        ""                                              ""                          ""          ""
-#    item    exportObjects      command         "Using xtable..."         xtable.Export            ""          "packageAvailable('xtable')"
-#    item    dataMenu           cascade         "Export objects (Export)"    exportObjects               ""          ""
-
-
+    menu    exportMenu      topMenu     ""                              ""                  ""          ""
+    item    exportMenu      command     "LaTeX or HTML... (xtable)"     xtableExport        ""          "packageAvailable('xtable')"
+    item    exportMenu      command     "LaTeX... (Hmisc)"              latexExport         ""          "packageAvailable('Hmisc')"
+    item    exportMenu      command     "Format data frame or matrix..."          formatdfExport     ""          "packageAvailable('Hmisc')"
+    item    topMenu         cascade     "Export"                        exportMenu          ""          ""
 

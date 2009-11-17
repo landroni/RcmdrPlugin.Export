@@ -1,5 +1,5 @@
 === xtable() ===
-- In the case of objects of class "numSummary", summarized by group, only the table for the first variable is exported ("Numerical summaries..")
-- Before being passed to xtable(), arrays are not always, not necessarily converted in a best way. When the number of items contained in the array is elevated, the generated LaTeX table may well not fit an A4 portrait-oriented page ("Table of statistics..")
-- Objects of class `"xtabs" "table"' are not necessarily treated correctly. With no conversion applied, only the table for the first variable is exported ("Multi-way table..")
-- Objects of class "htest" cannot be exported
+- In the case of objects of class "numSummary", summarized by group, only the table for the first variable is exported (poor handling of "array" objects).
+- Before being passed to the converter, "array" objects are not always well handled. When the number of items contained in the array is high, the generated LaTeX table may well not fit an A4 portrait-oriented page ("Table of statistics..").
+- Objects of class `"xtabs" "table"' are not necessarily treated correctly. With no conversion applied, only the table for the first variable is exported ("Multi-way table..").
+- There is only partial support via Hmisc::latex() for objects of class "htest".

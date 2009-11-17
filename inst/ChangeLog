@@ -1,0 +1,19 @@
+Version 0.3-0 (2009-11-17)
+    * Add support for Hmsic::latex() (it is now possible to preview the generated LaTeX code)
+    * Add support for Hmsic::format.df()
+    * Add several print options for xtable()
+    * Implement mechanism to propose a 'digits' vector of appropriate length
+    * Improve the handling of several classes
+    * Improve the (previously terribly messy) documentation 
+
+Version 0.2-2 (2009-10-13)
+    * Make .Rd files compatible with the 2.10 R parser
+
+Version 0.2-1
+    * Release the code under the same licence that Rcmdr code is released
+    * Add support for the 'file' and 'append' options of print.xtable() (suggested by Ulrich Halekoh)
+    * Updated the documentation, which now includes information on compatibility with regular word-processing programmes. 
+
+Version 0.2-0
+    * Initial public release
+
