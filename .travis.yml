@@ -11,6 +11,7 @@ before_install:
   - ./pkg-build.sh bootstrap
 
 install:
+  - ./pkg-build.sh aptget_install tk-dev
   - ./pkg-build.sh install_deps
 
 script:
@@ -26,6 +27,6 @@ notifications:
 
 env:
   matrix:
-    - RVERSION=oldrel
-    - RVERSION=release
+    #- RVERSION=oldrel
+    #- RVERSION=release
     - RVERSION=devel
