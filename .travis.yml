@@ -14,9 +14,16 @@ install:
   ## For installing all CRAN dependencies using rpack's DESCRIPTION
   - ./travis-tool.sh install_deps
 
+script: ./travis-tool.sh run_tests
+
+after_failure:
+  - ./travis-tool.sh dump_logs
+
+
 env:
  global:
-   - CRAN: http://cran.rstudio.com
+   #- CRAN: http://cran.rstudio.com
+   - CRAN: http://cran.univ-lyon1.fr/
 
 notifications:
   email:
