@@ -1,0 +1,1 @@
+https://travis-ci.org/landroni/RcmdrPlugin.Export.svg?branch=master
