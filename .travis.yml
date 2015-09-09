@@ -2,7 +2,7 @@
 ## See https://github.com/metacran/r-builder for details.
 
 language: c
-warnings_are_errors: true
+#warnings_are_errors: true
 sudo: required
 
 before_install:
