@@ -91,7 +91,6 @@ xtableExport <- function(){
       values=c("tabular", "longtable"), initialValue=..values[1], 
       labels=gettextRcmdr(c("tabular", "longtable")), 
       title=gettextRcmdr("Tabular env."))
-    require("xtable")
     onOK <- function(){
         type <- tclvalue(typeVariable)
         caption <- paste(tclvalue(captionInput))

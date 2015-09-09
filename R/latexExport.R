@@ -92,7 +92,6 @@ latexExport <- function(){
     vbarCheckBox <- tkcheckbutton(checkboxesFrame, variable=vbarVariable)
     nomarginsVariable <- tclVar("1")
     nomarginsCheckBox <- tkcheckbutton(checkboxesFrame, variable=nomarginsVariable)
-    require("Hmisc")
     onOK <- function(){
         caption <- paste(tclvalue(captionInput))
         label <- paste(tclvalue(labelInput))

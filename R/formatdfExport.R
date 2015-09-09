@@ -46,7 +46,6 @@ formatdfExport <- function(){
     math.colCheckBox <- tkcheckbutton(optionsFrame, variable=math.colVariable)
     slashVariable <- tclVar("0")
     slashCheckBox <- tkcheckbutton(optionsFrame, variable=slashVariable)
-    require("Hmisc")
     onOK <- function(){
         objectName <- getSelection(framesMatricesBox)
         dec <- paste(tclvalue(decInput))
