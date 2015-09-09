@@ -1,3 +1,6 @@
+Version 0.3-1 (2015-09-09)
+    * Fix CRAN checks
+    
 Version 0.3-0 (2009-11-17)
     * Add support for Hmsic::latex() (it is now possible to preview the generated LaTeX code)
     * Add support for Hmsic::format.df()

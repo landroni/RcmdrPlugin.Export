@@ -1,12 +1,11 @@
 Package: RcmdrPlugin.Export
-Version: 0.3-0
-Date: 2009-11-17
-Title: Graphically export output to LaTeX or HTML
+Version: 0.3-1
+Date: 2015-09-09
+Title: Export R output to LaTeX or HTML
 Author: Liviu Andronic
 Maintainer: Liviu Andronic <landronimirc@gmail.com>
 Depends: Rcmdr (>= 1.3-12), xtable, Hmisc
-Description: The package helps users to graphically export Rcmdr output
-        to LaTeX or HTML code, via xtable() or Hmisc::latex(). The
+Description: Export Rcmdr output to LaTeX or HTML code. The
         plug-in was originally intended to facilitate exporting Rcmdr
         output to formats other than ASCII text and to provide R
         novices with an easy-to-use, easy-to-access reference on
