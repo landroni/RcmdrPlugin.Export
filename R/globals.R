@@ -1,0 +1,1 @@
+globalVariables(c('top', 'buttonsFrame', 'typeFrame', 'typeVariable'))
