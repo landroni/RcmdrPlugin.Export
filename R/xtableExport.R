@@ -36,7 +36,7 @@ xtableExport <- function(){
     captionField <- tkentry(optionsFrame, width="15", textvariable=captionInput)
     radioButtons(window=optionsFrame, name="caption.place", 
       buttons=c("top", "bottom"),
-      values=c("top", "bottom"), initialValue=..values[2], 
+      values=c("top", "bottom"), initialValue="bottom", 
       labels=gettextRcmdr(c("Top", "Bottom")), 
       title=gettextRcmdr("Caption place."))
     labelInput <- tclVar("")
@@ -88,7 +88,7 @@ xtableExport <- function(){
     floatCheckBox <- tkcheckbutton(additionalFrame, variable=floatVariable)
     radioButtons(window=additionalFrame, name="tab.env", 
       buttons=c("tabular", "longtable"),
-      values=c("tabular", "longtable"), initialValue=..values[1], 
+      values=c("tabular", "longtable"), #initialValue="tabular", 
       labels=gettextRcmdr(c("tabular", "longtable")), 
       title=gettextRcmdr("Tabular env."))
     onOK <- function(){
