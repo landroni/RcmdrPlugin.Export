@@ -276,16 +276,16 @@ latexExport <- function(){
         }
         justDoIt(paste(objectName, " <- .tmpObject", sep=""))
         logger(paste(objectName, " <- popOutput()   ## retrieve the last printed object", sep=""))
-        justDoIt(paste(".matPercentage <- FALSE"))
+        .matPercentage <- FALSE
         if (objectClass == "matrix"){
-            justDoIt(paste('.matPercentage <- !(nrow(as.matrix(grep("%",
+            eval(parse(text=paste('.matPercentage <- !(nrow(as.matrix(grep("%",
                 colnames(', objectCommandName, "), fixed=TRUE))) == 0)",
-                sep=""))
+                sep="")))
             }
         if (objectClass == "numSummary" || .matPercentage == TRUE){
             doItAndPrint(paste("colnames(", objectCommandName,
-                ') <- gsub("%", "\\\\%",', "colnames(", objectCommandName,
-                "), fixed=TRUE)", sep=""))
+                ') <- gsub("%", "\\\\%", ', "colnames(", objectCommandName,
+                "), fixed=TRUE)  ##escape '%' for LaTeX", sep=""))
             }
         for (i in 1:commandRepeat){
             doItAndPrint(paste(inObject, functionName, "(", objectCommandName[i],
@@ -302,7 +302,9 @@ latexExport <- function(){
                   center, ', title="")', "   ## Invoke .dvi viewer", sep=""))
             }
         }
-        justDoIt(paste('rm(list=c(".tmpObject", ".matPercentage", "',  objectName, '"))', sep=""))
+        justDoIt(paste('rm(list=c(".tmpObject", ', 
+            #'".matPercentage", ', 
+            '"',  objectName, '"))', sep=""))
         logger(paste("remove(", objectName, ")", sep=""))
         tkdestroy(top)
         tkfocus(CommanderWindow())
