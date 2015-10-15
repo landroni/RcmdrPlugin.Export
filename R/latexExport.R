@@ -4,12 +4,13 @@
 # last modified: 22 Oct 2009
 
 latexExport <- function(){
-    justDoIt(paste(".tmpObject <- popOutput()"))
+    .tmpObject <- popOutput(keep=TRUE)
     objectClass <- class(.tmpObject)
     objectClass <- objectClass[[1]]
     objectName <- paste(".", objectClass, sep="")
     if (is.null(objectClass) == "TRUE" | objectClass == "logical"){
-        justDoIt(paste("remove(", ".tmpObject", ")", sep=""))
+        .tmpObject <- popOutput()
+        rm(.tmpObject)
         Message(message=paste("latex() cannot export objects of class '", objectClass,
           "'", sep=""), type="note")
         Message(message=paste("the stack is probably empty", sep=""), type="warning")
@@ -17,7 +18,8 @@ latexExport <- function(){
     } else if (objectClass == "function" | objectClass == "help_files_with_topic" |
         objectClass == "packageIQR" | objectClass == "trellis" | objectClass == "xtable" |
         objectClass == "latex" | objectClass == "stem.leaf" | objectClass == "multinom"){
-        justDoIt(paste("remove(", ".tmpObject", ")", sep=""))
+        .tmpObject <- popOutput()
+        rm(.tmpObject)
         Message(message=paste("latex() cannot export objects of class '", objectClass,
           "'", sep=""), type="note")
         return(latexExport())
@@ -244,7 +246,7 @@ latexExport <- function(){
         } else if (objectClass == "array" | objectClass == "integer" |
           objectClass == "character" | objectClass == "numeric"){
             objectCommandName <- paste("as.data.frame(", objectName, ")", sep="")
-### support for `rcorr' possibly buggy
+        ###FIXME support for `rcorr' possibly buggy
         } else if (objectClass == "rcorr"){
             objectCommandName <- paste(objectName, sep="")
             functionName <- "latex.list"
@@ -271,41 +273,65 @@ latexExport <- function(){
             objectName <- paste(".object", sep="")
             objectCommandName <- paste(objectName)
         }
+        assign(objectName, .tmpObject)
         if (inObject != ""){
             inObject <- paste(objectName, " <- ", sep="")
         }
-        justDoIt(paste(objectName, " <- .tmpObject", sep=""))
-        logger(paste(objectName, " <- popOutput()   ## retrieve the last printed object", sep=""))
+        
+        cmds <- character(3)
+        cmds[1] <- paste0("local({\n  ", 
+                         "## retrieve the last printed object\n  ",
+                         objectName, " <- popOutput()")
+        #justDoIt(paste(objectName, " <- .tmpObject", sep=""))
+        #eval(parse(text=paste(objectName, " <- .tmpObject", sep="")))
+        #logger(paste(objectName, " <- popOutput()   ## retrieve the last printed object", sep=""))
         .matPercentage <- FALSE
         if (objectClass == "matrix"){
             eval(parse(text=paste('.matPercentage <- !(nrow(as.matrix(grep("%",
                 colnames(', objectCommandName, "), fixed=TRUE))) == 0)",
                 sep="")))
             }
-        if (objectClass == "numSummary" || .matPercentage == TRUE){
-            doItAndPrint(paste("colnames(", objectCommandName,
-                ') <- gsub("%", "\\\\%", ', "colnames(", objectCommandName,
-                "), fixed=TRUE)  ##escape '%' for LaTeX", sep=""))
-            }
+        need.sanitize <- (objectClass == "numSummary" || .matPercentage == TRUE)
+        if (need.sanitize){
+            run.sanitize <- paste("  ## escape strings for LaTeX\n  ",
+                "colnames(", objectCommandName,
+                ") <- \n    latexTranslate(", "colnames(", objectCommandName,
+                "))", sep="")
+            cmds[2] <- run.sanitize
+            #logger(run.sanitize)
+            #eval(parse(text=run.sanitize))
+        } else {
+            cmds[2] <- ""
+        }
+        run.command <- character(length(commandRepeat))
         for (i in 1:commandRepeat){
-            doItAndPrint(paste(inObject, functionName, "(", objectCommandName[i],
+            run.command[i] <- paste("  ", inObject, functionName, "(", objectCommandName[i],
               caption, caption.loc, label, digits, size, na, file, append,
               longtable, tab.env, landscape, booktabs, ctable, vbar, nomargins,
-              center, ', title="")', sep=""))
-            }
+              center, ', title="")', sep="")
+            #logger(run.command)
+            #eval(parse(text=run.command))
+        }
         if (secondTime){
-            file <- paste("", sep="")
+            file <- paste("", sep="")  ##default file runs DVI preview
+            run.preview <- character(length(commandRepeat))
+            ##FIXME preview works only for last call (smth with local({}))
             for (i in 1:commandRepeat){
-                doItAndPrint(paste(inObject, functionName, "(", objectCommandName[i],
-                  caption, caption.loc, label, digits, size, na, file, append,
-                  longtable, tab.env, landscape, booktabs, ctable, vbar, nomargins,
-                  center, ', title="")', "   ## Invoke .dvi viewer", sep=""))
+                run.preview[i] <- paste0(if(i==1) "  ## DVI preview\n  " else "  ", 
+                                        inObject, functionName, "(", objectCommandName[i],
+                                        caption, caption.loc, label, digits, size, na, file, append,
+                                        longtable, tab.env, landscape, booktabs, ctable, vbar, 
+                                        nomargins, center, ', title="")')
+                #logger(run.preview)
+                #eval(parse(text=run.preview))
             }
         }
-        justDoIt(paste('rm(list=c(".tmpObject", ', 
-            #'".matPercentage", ', 
-            '"',  objectName, '"))', sep=""))
-        logger(paste("remove(", objectName, ")", sep=""))
+        commands <- paste(c(cmds[1], if(need.sanitize) run.sanitize, 
+            run.command, if(secondTime) run.preview), collapse="\n")
+        doItAndPrint(paste(commands, "\n})", sep=""))
+        #eval(parse(text=paste('rm(list=c(', '"',  objectName, '"))', sep="")))
+        #logger(paste("remove(", objectName, ")", sep=""))
+        
         tkdestroy(top)
         tkfocus(CommanderWindow())
     }
