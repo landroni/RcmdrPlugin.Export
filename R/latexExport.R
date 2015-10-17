@@ -303,7 +303,7 @@ latexExport <- function(){
         } else {
             cmds[2] <- ""
         }
-        run.command <- character(length(commandRepeat))
+        run.command <- character(commandRepeat)
         for (i in 1:commandRepeat){
             run.command[i] <- paste("  ", inObject, functionName, "(", objectCommandName[i],
               caption, caption.loc, label, digits, size, na, file, append,
@@ -313,15 +313,22 @@ latexExport <- function(){
             #eval(parse(text=run.command))
         }
         if (secondTime){
-            file <- paste("", sep="")  ##default file runs DVI preview
-            run.preview <- character(length(commandRepeat))
-            ##FIXME preview works only for last call (smth with local({}))
+            file <- paste0("")  ##default file runs DVI preview
+            ##without print() preview works only for last call
+            if(commandRepeat > 1){
+                usePrint <- paste0("print(")
+                endPrint <- paste0(")")
+            } else {
+                usePrint <- paste0("")
+                endPrint <- paste0("")
+            }
+            run.preview <- character(commandRepeat)
             for (i in 1:commandRepeat){
                 run.preview[i] <- paste0(if(i==1) "  ## DVI preview\n  " else "  ", 
-                                        inObject, functionName, "(", objectCommandName[i],
+                                        usePrint, inObject, functionName, "(", objectCommandName[i],
                                         caption, caption.loc, label, digits, size, na, file, append,
                                         longtable, tab.env, landscape, booktabs, ctable, vbar, 
-                                        nomargins, center, ', title="")')
+                                        nomargins, center, ', title="")', endPrint)
                 #logger(run.preview)
                 #eval(parse(text=run.preview))
             }
