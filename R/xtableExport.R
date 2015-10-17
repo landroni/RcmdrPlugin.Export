@@ -4,12 +4,13 @@
 # last modified: 07 Oct 2008
 
 xtableExport <- function(){
-    justDoIt(paste(".tmpObject <- popOutput()"))
+    .tmpObject <- popOutput(keep=TRUE)
     objectClass <- class(.tmpObject)
     objectClass <- objectClass[[1]]
     if (is.null(objectClass) == "TRUE" | objectClass == "logical"){
-        justDoIt(paste("remove(", ".tmpObject", ")", sep=""))
-        Message(message=paste("xtable() cannot export objects of class'", objectClass,
+        .tmpObject <- popOutput()
+        rm(.tmpObject)
+        Message(message=paste("xtable() cannot export objects of class '", objectClass,
           "'", sep=""), type="note")
         Message(message=paste("the stack is probably empty", sep=""), type="warning")
         return()
@@ -18,7 +19,8 @@ xtableExport <- function(){
       objectClass == "packageIQR" | objectClass == "trellis" | objectClass == "xtable" |
       objectClass == "latex" | objectClass == "htest" | objectClass == "stem.leaf" |
       objectClass == "multinom" | objectClass == "try-error"){
-        justDoIt(paste("remove(", ".tmpObject", ")", sep=""))
+        .tmpObject <- popOutput()
+        rm(.tmpObject)
         Message(message=paste("xtable() cannot export objects of class '", objectClass,
           "'", sep=""), type="note")
         return(xtableExport())
@@ -218,11 +220,17 @@ xtableExport <- function(){
             objectName <- paste(".object", sep="")
             objectCommandName <- paste(objectName)
         }
-        justDoIt(paste(objectName, " <- .tmpObject", sep=""))
-        logger(paste(objectName, " <- popOutput()   ## retrieve the last printed object", sep=""))
-        if (type == "LaTeX"){
-            if (size!="" | na!="" | file!="" | caption.place!="" | 
-              float!="" | tab.env!=""){
+        assign(objectName, .tmpObject)
+        cmds <- character(1)
+        cmds[1] <- paste0("local({\n  ", 
+                          "## retrieve the last printed object\n  ",
+                          objectName, " <- popOutput()")
+        # justDoIt(paste(objectName, " <- .tmpObject", sep=""))
+        # logger(paste(objectName, " <- popOutput()   ## retrieve the last printed object", sep=""))
+        ##always use print for length(commandRepeat)>1
+        if(type == "LaTeX"){
+            if(size!="" | na!="" | file!="" | caption.place!="" | 
+              float!="" | tab.env!="" | commandRepeat>1){
                 usePrint <- paste("print(", sep="")
                 printType <- paste(", type=", '"', "latex", '"', ")", sep="")
             } else {
@@ -234,13 +242,17 @@ xtableExport <- function(){
             usePrint <- paste("print(", sep="")
             printType <- paste(", type=", '"', "html", '"', ")", sep="")
         }
+        run.command <- character(commandRepeat)
         for (i in 1:commandRepeat){
-            doItAndPrint(paste(usePrint, "xtable(", objectCommandName[i], 
+            run.command[i] <- paste0("  ", usePrint, "xtable(", objectCommandName[i], 
               caption, label, align, digits, display, ")", caption.place, 
-              size, na, file, append, float, tab.env, printType, sep=""))
+              size, na, file, append, float, tab.env, printType)
         }
-        justDoIt(paste('rm(list=c(".tmpObject", "',  objectName, '"))', sep=""))
-            logger(paste("remove(", objectName, ")", sep=""))
+        commands <- paste(c(cmds[1], run.command), collapse="\n")
+        doItAndPrint(paste(commands, "\n})", sep=""))
+        
+        # justDoIt(paste('rm(list=c(".tmpObject", "',  objectName, '"))', sep=""))
+        #    logger(paste("remove(", objectName, ")", sep=""))
         tkdestroy(top)
         tkfocus(CommanderWindow())
     }
