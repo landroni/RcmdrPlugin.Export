@@ -4,5 +4,5 @@ export(listMatrixObjects, formatdfExport, latexExport, xtableExport)
 # Import all packages listed as Imports or Depends
 import(Rcmdr)
 importFrom(xtable, xtable)
-importFrom(Hmisc, latex)
+importFrom(Hmisc, latex, latexTranslate)
 
