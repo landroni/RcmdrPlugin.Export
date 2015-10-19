@@ -35,7 +35,7 @@ one may copy the generated \code{R} code and paste into code chunks
 in the \code{Sweave} document.  Learning \code{Sweave} is considerably trivial
 compared to learning \code{R}, so don't let yourself intimidated!  
 Although standard usage of \code{Sweave} requires knowledge of \code{LaTeX}, 
-one can readily use LyX to create \code{Sweave} documents [2][3][4], 
+one can readily use LyX to create \code{Sweave} documents [2][3], 
 thus avoiding the burden of (properly) learning \code{LaTeX}.  For this 
 particular usage, the plug-in can be seen as a reference guide 
 for retrieving (or learning) the correct syntax to exporting objects. 
@@ -58,7 +58,7 @@ the desired document.  This approach combined with the \code{append}
 argument is particularly useful when exporting many objects. % what about excel?
 
 For more information concerning exporting R output please see 
-this page [5] by Frank Harrell. 
+this page [4] by Frank Harrell. 
 
 %!! dynamic approach (HTML): R2HTML
 
@@ -93,10 +93,7 @@ conventional word-processing programmes \cr
 \emph{Using Sweave with LyX}, Rnews article by Gregor Gorjanc \cr
 [3]  \url{http://gregor.gorjanc.googlepages.com/lyx-sweave} -- 
 Files needed to configure \code{Sweave} and LyX \cr
-[4]  \url{http://n2.nabble.com/Moving-graphics-from-R-into-LyX-best-format-tp477568p477571.html} -- 
-Hackish instructions to configure \code{Sweave} and LyX (mostly 
-for Linux users)  \cr
-[5]  \url{http://biostat.mc.vanderbilt.edu/SweaveConvert} -- Converting 
+[4]  \url{http://biostat.mc.vanderbilt.edu/SweaveConvert} -- Converting 
 Documents Produced by Sweave  \cr
 }
 \seealso{
