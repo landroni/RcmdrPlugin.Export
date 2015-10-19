@@ -1,4 +1,8 @@
 ## adapted from Rcmdr utilities.R
+
+##FIXME CRAN checks: 
+##listMatrixObjects: possible error in ls(envir = envir, ...): ... used
+##in a situation where it does not exist
 listMatrixObjects <- function(envir=.GlobalEnv, ...){
     objects <- ls(envir=envir, ...)
     if (length(objects) == 0) NULL
